@@ -31,6 +31,25 @@
     </div>
 
     <script type="module">
+                // Firebaseの初期化
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+        import { getFirestore, query, collection, where, getDocs } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+
+        // Firebaseの設定
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6t0R7TrMr9CuEM-mzaNZIkh5t3Tw2VjE",
+            authDomain: "d4d4-402f0.firebaseapp.com",
+            projectId: "d4d4-402f0",
+            storageBucket: "d4d4-402f0.firebasestorage.app",
+            messagingSenderId: "933626616376",
+            appId: "1:933626616376:web:ddec47f1ffebbdc56724cd",
+            measurementId: "G-KRNZZVY396"
+        };
+
+        // Firebaseの初期化
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         // ページ読み込み時に呼び出す関数
         window.addEventListener('load', () => {
             const streamerNameElement = document.getElementById('streamerName');
