@@ -28,6 +28,7 @@
         <div class="form-section">
             <h2>投げ銭先選択</h2>
             <select id="donorSelect">
+                <option value="">選択してください</option>
                 <option value="1">配信者A</option>
                 <option value="2">配信者B</option>
                 <option value="3">配信者C</option>
@@ -47,5 +48,47 @@
             <button id="logoutButton" class="small-button">ログアウト</button>
         </div>
     </div>
+
+    <script type="module">
+        document.getElementById('donorSelect').addEventListener('change', async (event) => {
+            const selectedDonor = event.target.value;
+            const contentArea = document.getElementById('contentArea');
+            let htmlFileName = '';
+
+            switch (selectedDonor) {
+                case '1':
+                    htmlFileName = 'streamerA.html';
+                    break;
+                case '2':
+                    htmlFileName = 'streamerB.html';
+                    break;
+                case '3':
+                    htmlFileName = 'streamerC.html';
+                    break;
+                default:
+                    contentArea.innerHTML = ""; // 選択が解除された場合は内容をクリア
+                    return;
+            }
+
+            try {
+                const response = await fetch(htmlFileName);
+                const htmlContent = await response.text();
+                contentArea.innerHTML = htmlContent;
+
+                // スクリプトを動的に追加し、initializeStreamerを呼び出す
+                const script = document.createElement('script');
+                script.type = 'module';
+                script.textContent = `
+                    import { initializeStreamer } from './${htmlFileName}';
+                    initializeStreamer();
+                `;
+                contentArea.appendChild(script);
+
+            } catch (error) {
+                console.error("HTML読み込み中にエラーが発生しました:", error);
+                contentArea.innerHTML = "<p>コンテンツの読み込みに失敗しました。</p>";
+            }
+        });
+    </script>
 </body>
 </html>
