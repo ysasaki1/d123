@@ -50,13 +50,12 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ページ読み込み時に呼び出す関数
-        window.addEventListener('load', () => {
+        // 初期化関数
+        export async function initializeStreamer() {
             const streamerNameElement = document.getElementById('streamerName');
             const streamerName = streamerNameElement.innerText; // <h1>から配信者名を取得
-            loadUserPoints(streamerName) // 取得した配信者名を使用
-                .catch(err => console.error("エラー:", err)); // エラー処理
-        });
+            await loadUserPoints(streamerName); // 取得した配信者名を使用
+        }
 
         // 寄付の総額を取得する関数
         async function loadUserPoints(streamerName) {
