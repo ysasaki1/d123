@@ -186,6 +186,11 @@ document.getElementById('donorSelect').addEventListener('change', async (event) 
     // 寄付の総額を取得して表示
     if (streamerName) {
         await loadUserPoints2(streamerName);
+        // HTMLファイルを読み込む処理をここに追加
+        const htmlFileName = `${streamerName}.html`; // 例: '配信者A.html'
+        await loadHtmlContent(htmlFileName);
+    } else {
+        contentArea.innerHTML = ""; // ストリーマーが選択されていない場合は内容をクリア
     }
 });
 
@@ -206,16 +211,16 @@ async function loadUserPoints2(streamerName) {
     document.getElementById('totalDonatedAmount').innerText = `寄付総額: ${totalDonatedToStreamer}円`;
 }
 
-
-
-
-
-
-
+// HTMLファイルを読み込む関数
+async function loadHtmlContent(htmlFileName) {
+    const contentArea = document.getElementById('contentArea'); // コンテンツエリアを取得
 
     if (htmlFileName) {
         try {
             const response = await fetch(htmlFileName);
+            if (!response.ok) {
+                throw new Error('ネットワークエラー: ' + response.statusText);
+            }
             const htmlContent = await response.text();
             contentArea.innerHTML = htmlContent;
 
@@ -238,7 +243,8 @@ async function loadUserPoints2(streamerName) {
     } else {
         contentArea.innerHTML = ""; // 選択が解除された場合は内容をクリア
     }
-});
+}
+
 
 
 // 寄付機能
