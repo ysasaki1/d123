@@ -156,46 +156,75 @@ document.getElementById('chargePointsButton').addEventListener('click', async ()
 
 
 
-
 // ドロップダウンリストの初期状態を設定
 document.addEventListener('DOMContentLoaded', () => {
     const donorSelect = document.getElementById('donorSelect');
     donorSelect.selectedIndex = -1; // 初期状態で何も選択されていない状態に設定
 });
 
-// ドロップダウンリストの選択時に寄付の総額を表示
+// ドロップダウンリストの選択時に外部HTMLを読み込む
 document.getElementById('donorSelect').addEventListener('change', async (event) => {
     const selectedDonor = event.target.value;
+    const contentArea = document.getElementById('contentArea');
+    const totalDonatedAmountElement = document.getElementById('totalDonatedAmount');
+    let htmlFileName = '';
     let streamerName = '';
 
     switch (selectedDonor) {
         case '1':
+            htmlFileName = 'streamerA.html';
             streamerName = '配信者A';
             break;
         case '2':
+            htmlFileName = 'streamerB.html';
             streamerName = '配信者B';
             break;
         case '3':
+            htmlFileName = 'streamerC.html';
             streamerName = '配信者C';
             break;
         default:
-            streamerName = '';
+            htmlFileName = '';
             break;
     }
 
-    // 寄付の総額を取得して表示
-    if (streamerName) {
-        await loadUserPoints2(streamerName);
-        // HTMLファイルを読み込む処理をここに追加
-        const htmlFileName = `${streamerName}.html`; // 例: '配信者A.html'
-        await loadHtmlContent(htmlFileName);
+    if (htmlFileName) {
+        try {
+            const response = await fetch(htmlFileName);
+            if (!response.ok) {
+                throw new Error('ネットワークエラー: ' + response.statusText);
+            }
+            const htmlContent = await response.text();
+            contentArea.innerHTML = htmlContent;
+
+            // 寄付の総額を取得して表示
+            await loadUserPoints2(streamerName, totalDonatedAmountElement);
+
+            const closeButton = document.createElement('button');
+            closeButton.innerText = '閉じる';
+            closeButton.style.marginTop = '10px';
+            closeButton.style.display = 'block'; // ボタンをブロック要素にして幅を全体に
+            closeButton.style.marginLeft = 'auto'; // 左側のマージンを自動で
+            closeButton.style.marginRight = 'auto'; // 右側のマージンを自動で
+            contentArea.appendChild(closeButton);
+
+            closeButton.addEventListener('click', () => {
+                contentArea.innerHTML = ''; // コンテンツをクリア
+                donorSelect.selectedIndex = -1; // ドロップダウンをリセット
+                totalDonatedAmountElement.innerText = ''; // 寄付総額をクリア
+            });
+        } catch (error) {
+            console.error("HTML読み込み中にエラーが発生しました:", error);
+            contentArea.innerHTML = "<p>コンテンツの読み込みに失敗しました。</p>";
+        }
     } else {
-        contentArea.innerHTML = ""; // ストリーマーが選択されていない場合は内容をクリア
+        contentArea.innerHTML = ""; // 選択が解除された場合は内容をクリア
+        totalDonatedAmountElement.innerText = ''; // 寄付総額をクリア
     }
 });
 
 // 寄付の総額を取得する関数
-async function loadUserPoints2(streamerName) {
+async function loadUserPoints2(streamerName, totalDonatedAmountElement) {
     const donationsQuery = query(collection(db, "donations"), where("streamer", "==", streamerName));
     const donationSnapshot = await getDocs(donationsQuery);
 
@@ -208,8 +237,9 @@ async function loadUserPoints2(streamerName) {
     });
 
     // 寄付の総額を表示
-    document.getElementById('totalDonatedAmount').innerText = `寄付総額: ${totalDonatedToStreamer}円`;
+    totalDonatedAmountElement.innerText = `寄付総額: ${totalDonatedToStreamer}円`;
 }
+
 
 // HTMLファイルを読み込む関数
 async function loadHtmlContent(htmlFileName) {
