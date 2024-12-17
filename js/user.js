@@ -270,3 +270,15 @@ document.getElementById('donateButton').addEventListener('click', async () => {
     }
 });
 
+
+// フッターを読み込む関数
+async function loadFooter() {
+    const response = await fetch('footer.html');
+    const footerHTML = await response.text();
+    document.body.insertAdjacentHTML('beforeend', footerHTML);
+}
+
+
+
+
+
