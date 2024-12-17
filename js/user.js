@@ -271,12 +271,35 @@ document.getElementById('donateButton').addEventListener('click', async () => {
 });
 
 
-// フッターを読み込む関数
-async function loadFooter() {
-    const response = await fetch('footer.html');
-    const footerHTML = await response.text();
-    document.body.insertAdjacentHTML('beforeend', footerHTML);
+
+async function loadUserPoints(uid) {
+    const user = auth.currentUser;
+
+    // ユーザーのチャージ総額を取得
+    const chargesQuery = query(collection(db, "charges"), where("userId", "==", user.uid));
+    const chargeSnapshot = await getDocs(chargesQuery);
+
+    let totalCharged = 0;
+    chargeSnapshot.forEach(doc => {
+        totalCharged += doc.data().amount;
+    });
+
+    // 配信者Aへの寄付総額を取得
+    const donationsQuery = query(collection(db, "donations"), where("userId", "==", user.uid), where("streamer", "==", "配信者A"));
+    const donationSnapshot = await getDocs(donationsQuery);
+
+    let totalDonatedToStreamerA = 0;
+    donationSnapshot.forEach(doc => {
+        totalDonatedToStreamerA += doc.data().amount;
+    });
+
+    const currentPoints = totalCharged - totalDonatedToStreamerA;
+    document.getElementById('currentPoints').innerText = `現在のポイント: ${currentPoints}`;
+
+    // 配信者Aへの寄付の総額を表示
+    document.getElementById('totalDonatedAmount').innerText = `寄付総額: ${totalDonatedToStreamerA}円`;
 }
+
 
 
 
