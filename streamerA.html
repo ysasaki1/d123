@@ -53,7 +53,7 @@
         // ページ読み込み時に呼び出す関数
         window.addEventListener('load', () => {
             const urlPath = window.location.pathname; // URLのパスを取得
-            const streamerName = urlPath.split('/').pop().replace('.html', ''); // "streamerX.html"から"配信者X"を取得
+            const streamerName = urlPath.split('/').pop().replace('.html', ''); // "streamerA.html"から"配信者A"を取得
             loadUserPoints(streamerName) // 取得した配信者名を使用
                 .catch(err => console.error("エラー:", err)); // エラー処理
         });
@@ -63,8 +63,7 @@
             const donationsQuery = query(collection(db, "donations"), where("streamer", "==", streamerName));
             const donationSnapshot = await getDocs(donationsQuery);
 
-            // 取得したドキュメントの数を確認
-            console.log(`取得したドキュメント数: ${donationSnapshot.size}`);
+            console.log(`取得したドキュメント数: ${donationSnapshot.size}`); // デバッグ用ログ
 
             let totalDonatedToStreamer = 0;
             donationSnapshot.forEach(doc => {
