@@ -1,0 +1,38 @@
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eef2f3;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center; /* コンテナ内のテキストを中央寄せ */
+        }
+
+        .icon {
+            width: 80px; /* アイコンの幅を80pxに設定 */
+            height: auto; /* 高さは自動調整 */
+            border-radius: 50%; /* アイコンを丸くする場合 */
+            margin: 10px 0; /* 上下にマージンを追加 */
+            display: block; /* ブロック要素にして中央寄せ可能に */
+            margin-left: auto; /* 左側のマージンを自動で */
+            margin-right: auto; /* 右側のマージンを自動で */
+        }
+
+        .sns-icons {
+            display: flex; /* フレックスボックスを使用 */
+            justify-content: center; /* 中央寄せ */
+            margin-top: 20px; /* 上部にマージンを追加 */
+        }
+
+        .sns-icon {
+            width: 32px; /* 各アイコンの幅を40pxに設定 */
+            height: 32px; /* 各アイコンの高さを40pxに設定 */
+            margin: 0 15px; /* 左右にマージンを追加 */
+        }

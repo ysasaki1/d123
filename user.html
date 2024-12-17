@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ウェブアプリケーション</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="module" src="js/user.js"></script>
+</head>
+<body>
+    <div class="container">
+        <p id="welcomeMessage"></p>
+        <p id="currentPoints">現在のポイント: 0</p>
+
+        <div class="form-section">
+            <h2>ポイントチャージ</h2>
+            <label for="chargeAmount">チャージ金額を選択:</label>
+            <select id="chargeAmount">
+                <option value="500">500ポイント</option>
+                <option value="1000">1000ポイント</option>
+                <option value="2000">2000ポイント</option>
+                <option value="5000">5000ポイント</option>
+                <option value="10000">10000ポイント</option>
+            </select>
+            <button id="chargePointsButton" class="small-button">ポイントをチャージ</button>
+        </div>
+
+        <div class="form-section">
+            <h2>投げ銭先選択</h2>
+            <select id="donorSelect">
+                <option value="1">配信者A</option>
+                <option value="2">配信者B</option>
+                <option value="3">配信者C</option>
+            </select>
+            <input type="number" id="donationAmount" placeholder="寄付金額" min="1" required>
+            <button id="donateButton" class="small-button">投げ銭する</button>
+        </div>
+
+        <div id="contentArea"></div>
+
+        <div class="form-section">
+            <h2>履歴</h2>
+            <ul id="historyList"></ul>
+        </div>
+
+        <div class="form-section">
+            <button id="logoutButton" class="small-button">ログアウト</button>
+        </div>
+    </div>
+</body>
+</html>
