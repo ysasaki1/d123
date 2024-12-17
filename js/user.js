@@ -154,8 +154,6 @@ document.getElementById('chargePointsButton').addEventListener('click', async ()
 });
 
 
-
-
 // ドロップダウンリストの初期状態を設定
 document.addEventListener('DOMContentLoaded', () => {
     const donorSelect = document.getElementById('donorSelect');
@@ -166,22 +164,17 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById('donorSelect').addEventListener('change', async (event) => {
     const selectedDonor = event.target.value;
     const contentArea = document.getElementById('contentArea');
-    const totalDonatedAmountElement = document.getElementById('totalDonatedAmount');
     let htmlFileName = '';
-    let streamerName = '';
 
     switch (selectedDonor) {
         case '1':
             htmlFileName = 'streamerA.html';
-            streamerName = '配信者A';
             break;
         case '2':
             htmlFileName = 'streamerB.html';
-            streamerName = '配信者B';
             break;
         case '3':
             htmlFileName = 'streamerC.html';
-            streamerName = '配信者C';
             break;
         default:
             htmlFileName = '';
@@ -191,14 +184,8 @@ document.getElementById('donorSelect').addEventListener('change', async (event) 
     if (htmlFileName) {
         try {
             const response = await fetch(htmlFileName);
-            if (!response.ok) {
-                throw new Error('ネットワークエラー: ' + response.statusText);
-            }
             const htmlContent = await response.text();
             contentArea.innerHTML = htmlContent;
-
-            // 寄付の総額を取得して表示
-            await loadUserPoints2(streamerName, totalDonatedAmountElement);
 
             const closeButton = document.createElement('button');
             closeButton.innerText = '閉じる';
@@ -211,7 +198,6 @@ document.getElementById('donorSelect').addEventListener('change', async (event) 
             closeButton.addEventListener('click', () => {
                 contentArea.innerHTML = ''; // コンテンツをクリア
                 donorSelect.selectedIndex = -1; // ドロップダウンをリセット
-                totalDonatedAmountElement.innerText = ''; // 寄付総額をクリア
             });
         } catch (error) {
             console.error("HTML読み込み中にエラーが発生しました:", error);
@@ -219,62 +205,8 @@ document.getElementById('donorSelect').addEventListener('change', async (event) 
         }
     } else {
         contentArea.innerHTML = ""; // 選択が解除された場合は内容をクリア
-        totalDonatedAmountElement.innerText = ''; // 寄付総額をクリア
     }
 });
-
-// 寄付の総額を取得する関数
-async function loadUserPoints2(streamerName, totalDonatedAmountElement) {
-    const donationsQuery = query(collection(db, "donations"), where("streamer", "==", streamerName));
-    const donationSnapshot = await getDocs(donationsQuery);
-
-    console.log(`取得したドキュメント数: ${donationSnapshot.size}`); // デバッグ用ログ
-
-    let totalDonatedToStreamer = 0;
-    donationSnapshot.forEach(doc => {
-        console.log("ドキュメントデータ:", doc.data()); // 各ドキュメントのデータを表示
-        totalDonatedToStreamer += doc.data().amount;
-    });
-
-    // 寄付の総額を表示
-    totalDonatedAmountElement.innerText = `寄付総額: ${totalDonatedToStreamer}円`;
-}
-
-
-// HTMLファイルを読み込む関数
-async function loadHtmlContent(htmlFileName) {
-    const contentArea = document.getElementById('contentArea'); // コンテンツエリアを取得
-
-    if (htmlFileName) {
-        try {
-            const response = await fetch(htmlFileName);
-            if (!response.ok) {
-                throw new Error('ネットワークエラー: ' + response.statusText);
-            }
-            const htmlContent = await response.text();
-            contentArea.innerHTML = htmlContent;
-
-            const closeButton = document.createElement('button');
-            closeButton.innerText = '閉じる';
-            closeButton.style.marginTop = '10px';
-            closeButton.style.display = 'block'; // ボタンをブロック要素にして幅を全体に
-            closeButton.style.marginLeft = 'auto'; // 左側のマージンを自動で
-            closeButton.style.marginRight = 'auto'; // 右側のマージンを自動で
-            contentArea.appendChild(closeButton);
-
-            closeButton.addEventListener('click', () => {
-                contentArea.innerHTML = ''; // コンテンツをクリア
-                donorSelect.selectedIndex = -1; // ドロップダウンをリセット
-            });
-        } catch (error) {
-            console.error("HTML読み込み中にエラーが発生しました:", error);
-            contentArea.innerHTML = "<p>コンテンツの読み込みに失敗しました。</p>";
-        }
-    } else {
-        contentArea.innerHTML = ""; // 選択が解除された場合は内容をクリア
-    }
-}
-
 
 
 // 寄付機能
@@ -337,16 +269,3 @@ document.getElementById('donateButton').addEventListener('click', async () => {
         alert("寄付処理中にエラーが発生しました。もう一度お試しください。");
     }
 });
-
-
-// フッターを読み込む関数
-async function loadFooter() {
-    const response = await fetch('footer.html');
-    const footerHTML = await response.text();
-    document.body.insertAdjacentHTML('beforeend', footerHTML);
-}
-
-
-
-
-
