@@ -6,7 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>配信者A</title>
 </head>
-        <script type="module">
+<body>
+    <div class="container">
+        <h1>配信者A</h1>
+        <img src="images/s1.png" alt="配信者Aのアイコン" class="icon">
+        <p>プロフィール文: ゲーム実況を中心に配信しています！</p>
+        <p id="totalDonatedAmount">寄付総額: 0円</p>
+        <p>分野: ゲーム</p>
+
+        <div class="sns-icons">
+            <a href="https://youtube.com/channel/xxxxx" target="_blank">
+                <img src="images/y1.png" alt="YouTube" class="sns-icon">
+            </a>
+            <a href="https://instagram.com/xxxxx" target="_blank">
+                <img src="images/i1.png" alt="Instagram" class="sns-icon">
+            </a>
+            <a href="https://tiktok.com/@xxxxx" target="_blank">
+                <img src="images/t1.png" alt="TikTok" class="sns-icon">
+            </a>
+            <a href="https://x.com/xxxxx" target="_blank">
+                <img src="images/x1.png" alt="X（旧Twitter）" class="sns-icon">
+            </a>
+        </div>
+    </div>
+
+    <script type="module">
         // Firebaseの初期化
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
         import { getFirestore, query, collection, where, getDocs } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
@@ -30,17 +54,21 @@
         window.addEventListener('load', () => {
             const urlPath = window.location.pathname; // URLのパスを取得
             const streamerName = urlPath.split('/').pop().replace('.html', ''); // "streamerX.html"から"配信者X"を取得
-            loadUserPoints(streamerName); // 取得した配信者名を使用
+            loadUserPoints(streamerName) // 取得した配信者名を使用
+                .catch(err => console.error("エラー:", err)); // エラー処理
         });
 
         // 寄付の総額を取得する関数
         async function loadUserPoints(streamerName) {
-            // 指定された配信者への寄付総額を取得
             const donationsQuery = query(collection(db, "donations"), where("streamer", "==", streamerName));
             const donationSnapshot = await getDocs(donationsQuery);
 
+            // 取得したドキュメントの数を確認
+            console.log(`取得したドキュメント数: ${donationSnapshot.size}`);
+
             let totalDonatedToStreamer = 0;
             donationSnapshot.forEach(doc => {
+                console.log("ドキュメントデータ:", doc.data()); // 各ドキュメントのデータを表示
                 totalDonatedToStreamer += doc.data().amount;
             });
 
@@ -48,28 +76,5 @@
             document.getElementById('totalDonatedAmount').innerText = `寄付総額: ${totalDonatedToStreamer}円`;
         }
     </script>
-<body>
-    <div class="container">
-        <h1>配信者A</h1>
-        <img src="images/s1.png" alt="配信者Aのアイコン" class="icon">
-        <p id="totalDonatedAmount">寄付総額: 0円</p>
-        <p>プロフィール文: ゲーム実況を中心に配信しています！</p>
-        <p>分野: ゲーム</p>
-
-        <div class="sns-icons">
-            <a href="https://youtube.com/channel/xxxxx" target="_blank">
-                <img src="images/y1.png" alt="YouTube" class="sns-icon">
-            </a>
-            <a href="https://instagram.com/xxxxx" target="_blank">
-                <img src="images/i1.png" alt="Instagram" class="sns-icon">
-            </a>
-            <a href="https://tiktok.com/@xxxxx" target="_blank">
-                <img src="images/t1.png" alt="TikTok" class="sns-icon">
-            </a>
-            <a href="https://x.com/xxxxx" target="_blank">
-                <img src="images/x1.png" alt="X（旧Twitter）" class="sns-icon">
-            </a>
-        </div>
-    </div>
 </body>
 </html>
