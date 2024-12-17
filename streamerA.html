@@ -10,8 +10,8 @@
     <div class="container">
         <h1>配信者A</h1>
         <img src="images/s1.png" alt="配信者Aのアイコン" class="icon">
-        <p id="totalDonatedAmount">寄付総額: 0円</p>
         <p>プロフィール文: ゲーム実況を中心に配信しています！</p>
+        <p id="totalDonatedAmount">寄付総額: 0円</p>
         <p>分野: ゲーム</p>
 
         <div class="sns-icons">
@@ -53,7 +53,9 @@
         // ページ読み込み時に呼び出す関数
         window.addEventListener('load', () => {
             const urlPath = window.location.pathname; // URLのパスを取得
-            const streamerName = urlPath.split('/').pop().replace('.html', ''); // "streamerA.html"から"配信者A"を取得
+            const fileName = urlPath.split('/').pop(); // "streamerX.html"を取得
+            const streamerNumber = fileName.replace('streamer', '').replace('.html', ''); // "X"を取得
+            const streamerName = `配信者${streamerNumber}`; // "配信者X"を作成
             loadUserPoints(streamerName) // 取得した配信者名を使用
                 .catch(err => console.error("エラー:", err)); // エラー処理
         });
