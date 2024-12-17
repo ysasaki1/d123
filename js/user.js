@@ -187,6 +187,19 @@ document.getElementById('donorSelect').addEventListener('change', async (event) 
             const htmlContent = await response.text();
             contentArea.innerHTML = htmlContent;
 
+            // initializeStreamer関数を呼び出す
+            const script = document.createElement('script');
+            script.type = 'module';
+            script.src = htmlFileName; // モジュールとしてHTMLを読み込む
+            contentArea.appendChild(script);
+
+            // モジュールの初期化関数を呼び出す
+            script.onload = () => {
+                if (typeof initializeStreamer === 'function') {
+                    initializeStreamer();
+                }
+            };
+
             const closeButton = document.createElement('button');
             closeButton.innerText = '閉じる';
             closeButton.style.marginTop = '10px';
@@ -207,6 +220,7 @@ document.getElementById('donorSelect').addEventListener('change', async (event) 
         contentArea.innerHTML = ""; // 選択が解除された場合は内容をクリア
     }
 });
+
 
 
 // 寄付機能
