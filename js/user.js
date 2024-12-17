@@ -185,12 +185,12 @@ document.getElementById('donorSelect').addEventListener('change', async (event) 
 
     // 寄付の総額を取得して表示
     if (streamerName) {
-        await loadUserPoints(streamerName);
+        await loadUserPoints2(streamerName);
     }
 });
 
 // 寄付の総額を取得する関数
-async function loadUserPoints(streamerName) {
+async function loadUserPoints2(streamerName) {
     const donationsQuery = query(collection(db, "donations"), where("streamer", "==", streamerName));
     const donationSnapshot = await getDocs(donationsQuery);
 
