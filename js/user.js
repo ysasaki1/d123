@@ -154,32 +154,64 @@ document.getElementById('chargePointsButton').addEventListener('click', async ()
 });
 
 
+
+
+
 // ドロップダウンリストの初期状態を設定
 document.addEventListener('DOMContentLoaded', () => {
     const donorSelect = document.getElementById('donorSelect');
     donorSelect.selectedIndex = -1; // 初期状態で何も選択されていない状態に設定
 });
 
-// ドロップダウンリストの選択時に外部HTMLを読み込む
+// ドロップダウンリストの選択時に寄付の総額を表示
 document.getElementById('donorSelect').addEventListener('change', async (event) => {
     const selectedDonor = event.target.value;
-    const contentArea = document.getElementById('contentArea');
-    let htmlFileName = '';
+    let streamerName = '';
 
     switch (selectedDonor) {
         case '1':
-            htmlFileName = 'streamerA.html';
+            streamerName = '配信者A';
             break;
         case '2':
-            htmlFileName = 'streamerB.html';
+            streamerName = '配信者B';
             break;
         case '3':
-            htmlFileName = 'streamerC.html';
+            streamerName = '配信者C';
             break;
         default:
-            htmlFileName = '';
+            streamerName = '';
             break;
     }
+
+    // 寄付の総額を取得して表示
+    if (streamerName) {
+        await loadUserPoints(streamerName);
+    }
+});
+
+// 寄付の総額を取得する関数
+async function loadUserPoints(streamerName) {
+    const donationsQuery = query(collection(db, "donations"), where("streamer", "==", streamerName));
+    const donationSnapshot = await getDocs(donationsQuery);
+
+    console.log(`取得したドキュメント数: ${donationSnapshot.size}`); // デバッグ用ログ
+
+    let totalDonatedToStreamer = 0;
+    donationSnapshot.forEach(doc => {
+        console.log("ドキュメントデータ:", doc.data()); // 各ドキュメントのデータを表示
+        totalDonatedToStreamer += doc.data().amount;
+    });
+
+    // 寄付の総額を表示
+    document.getElementById('totalDonatedAmount').innerText = `寄付総額: ${totalDonatedToStreamer}円`;
+}
+
+
+
+
+
+
+
 
     if (htmlFileName) {
         try {
